@@ -190,3 +190,39 @@ Optional extras live in separate branches of this repository, so `main` stays si
 - `githooks`: tracked git hooks that run on every commit, for example `air format`, `jarl check` and running the tests, activated with one `git config` line.
 
 Each branch has its own README explaining what it adds and how to use it. Browse them on GitHub: [`zenodo`](https://github.com/chase-lab/project-skeleton/tree/zenodo), [`website`](https://github.com/chase-lab/project-skeleton/tree/website), [`githooks`](https://github.com/chase-lab/project-skeleton/tree/githooks).
+
+## Archiving with Zenodo
+
+Why: a GitHub repository is not an archive. The owner can delete it, rename it or rewrite its history, and GitHub gives it no permanent identifier. Zenodo stores a frozen copy of a release and gives it a DOI, a permanent identifier that others can cite and that always resolves to that copy.
+
+When: when the paper is submitted (or accepted at the latest), so the DOI can go into the manuscript.
+
+Steps, one-off setup:
+
+1. Log in to <https://zenodo.org> with your GitHub account and authorise it.
+2. Go to your profile menu, then `GitHub`. Click `Sync now`, find the repository and flip its switch to on.
+3. Fill in `CITATION.cff` (no `<...>` left) and commit it.
+
+Steps, for each release:
+
+1. On GitHub, create a release (`Releases`, then `Draft a new release`) with a tag such as `v1.0.0`.
+2. Zenodo archives the release automatically. It can take a few minutes; check under your Zenodo `GitHub` page. If it fails, open the release there and read `Errors`; a broken `CITATION.cff` is the usual cause.
+3. Open the Zenodo record and copy the DOI badge snippet (Markdown) from it.
+4. Paste the DOI in the badge placeholder at the top of `README.md`, and cite it in the paper.
+
+Two DOIs: every record has a **version DOI** (this exact release) and a **concept DOI** (all versions, always points to the latest). Use the concept DOI in the README badge and in general citations; use the version DOI when a reader must get exactly the code behind one result.
+
+What Zenodo reads: `CITATION.cff` in the repository root, parsed on a best-effort basis (a subset of the format: title, version, authors with affiliation and ORCID, licence, abstract, keywords). You do not need anything else. A `.zenodo.json` is only needed for Zenodo-specific metadata that CITATION.cff cannot express (funding `grants`, Zenodo `communities`, `related_identifiers`, contributor roles). **If both files exist, Zenodo uses only `.zenodo.json` and ignores `CITATION.cff` completely** for the release record, so keep them consistent or use just one. This skeleton ships no `.zenodo.json`.
+
+Pre-release checklist:
+
+- [ ] `renv.lock` is committed and up to date (`renv::snapshot()`).
+- [ ] Tests pass (`testthat::test_dir("tests/testthat")`).
+- [ ] `CITATION.cff` has no `<...>` placeholders left, and validates.
+- [ ] `LICENSE` is filled in (year, holder).
+- [ ] No personal data, passwords, tokens or other secrets in the repository or its history.
+- [ ] Large or restricted data is not in the repo: put it on a pins board that has its own DOI, or archive it separately (for example as its own Zenodo record) and cite it from the README.
+
+Trial run: <https://sandbox.zenodo.org> is a separate test copy of Zenodo with its own account and its own GitHub switch. Its DOIs are not real and records may be deleted. Practise there first.
+
+Docs: <https://help.zenodo.org/docs/github/>.

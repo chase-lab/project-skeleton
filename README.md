@@ -7,6 +7,11 @@
 
 # Project skeleton
 
+<!-- PLACEHOLDER: replace <DOI> (twice) with the concept DOI after your first Zenodo release, then delete this comment. -->
+[![DOI](https://zenodo.org/badge/DOI/<DOI>.svg)](https://doi.org/<DOI>)
+
+**How to cite:** see [CITATION.cff](CITATION.cff).
+
 A minimal, reproducible starting point for an R research project: a simple
 folder layout, a curated `.gitignore`, pinned packages with renv, data checks
 with testthat, and a place for external data with pins. Download
@@ -71,3 +76,9 @@ Details, rules and recipes are in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md): 
 Optional extras live in separate branches: `zenodo`, `website` and `githooks`.
 You will not see them unless you look for them: `PROJECT_STRUCTURE.md`
 describes each one and links to it.
+
+## Archiving with Zenodo
+
+Zenodo stores a frozen copy of a GitHub release and gives it a citable, permanent DOI.
+Do it when you submit the paper: fill in `CITATION.cff`, enable the repo on Zenodo, create a release.
+Steps and checklist: "Archiving with Zenodo" in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).

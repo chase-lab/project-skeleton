@@ -10,3 +10,8 @@ authors:
     orcid: "<ORCID URL>"
 repository-code: "<REPOSITORY URL>"
 license: MIT
+# Optional fields Zenodo can use. Uncomment and fill in what applies.
+# abstract: "<ONE PARAGRAPH DESCRIBING THE PROJECT>"
+# keywords:
+#   - "<KEYWORD>"
+# doi: "<DOI, only known after the first Zenodo release>"
