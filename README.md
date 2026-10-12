@@ -75,4 +75,6 @@ Details, rules and recipes are in
 ## Optional add-on branches
 
 Optional extras live in separate branches you can merge when needed:
-`githooks`, `zenodo` and `website`.
+`githooks`, `zenodo` and `website` (all coming soon). You will not see
+them unless you look for them: `PROJECT_STRUCTURE.md` explains how to
+fetch, inspect and merge each one.

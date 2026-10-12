@@ -87,6 +87,19 @@ Commit `renv.lock` and `renv/activate.R`; renv ignores its own internals. The sk
 
 Quick-and-dirty path: run `renv::init()` now, `renv::snapshot()` before every commit that adds a package, and `renv::restore()` after every clone. That alone covers most of the benefit.
 
+## Formatting and linting with air and jarl
+
+What: air formats R code and jarl lints R code. Both are fast standalone binaries, not R packages, so they need no R session and are not tracked by renv. Install each following its own documentation.
+
+Why: consistent formatting gives clean diffs, fewer style debates in review, and a linter catches mistakes (unused objects, risky constructs) early. Both are optional.
+
+```bash
+air format .     # rewrite R files in place with a consistent style
+jarl check .     # report lints for R files in the current folder
+```
+
+Run `air format --help` and `jarl check --help` for the other options (for example `air format --check` only reports files that would change). Running both automatically on every commit is provided by the `githooks` branch; see the next section.
+
 ## Testing your data with checkmate and testthat
 
 Why: your analysis rests on expectations about the data (this column exists, ids are unique, temperatures are plausible). Written down, they catch problems at input, during manipulation and at output; unwritten, they fail silently.
@@ -133,8 +146,16 @@ With `versioned = TRUE` every write keeps the older version; list them with `pin
 
 ## Optional add-on branches
 
-Coming soon, each as a separate branch you can merge into your project.
+Optional extras live in separate branches of this repository, so `main` stays small. Each branch only adds files and docs on top of `main`; nothing in `main` is changed. None of them exist yet: all three are marked coming soon, and the commands below will work once a branch is published.
 
-- `githooks`: coming soon. Tracked git hooks (for example re-knitting the README and running tests before a commit), activated with one `git config` line.
-- `zenodo`: coming soon. Steps to archive a GitHub release on Zenodo and get a DOI, building on `CITATION.cff`.
-- `website`: coming soon. A Quarto website published with GitHub Pages from the same repository.
+- `githooks` (coming soon): tracked git hooks that run on every commit, for example `air format`, `jarl check`, re-knitting the README and running the tests, activated with one `git config` line.
+- `zenodo` (coming soon): steps to archive a GitHub release on Zenodo and get a DOI, building on `CITATION.cff`.
+- `website` (coming soon): a Quarto website published with GitHub Pages from the same repository.
+
+To get one (replace `<branch>` with `githooks`, `zenodo` or `website`):
+
+```bash
+git fetch origin              # download the list of branches
+git switch <branch>           # look at it without touching your work
+git merge origin/<branch>     # from your own branch: bring it into your work
+```
