@@ -52,6 +52,8 @@ outputs/**
 *.knit.md
 *.utf8.md
 .quarto/
+/_site/
+**/*.quarto_ipynb
 *.log
 /*.html
 *.tmp

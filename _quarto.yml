@@ -1,0 +1,31 @@
+# Quarto website config. Output goes to _site/ (Quarto default), which is
+# ignored by git. It does not clash with docs/, which holds logos.
+project:
+  type: website
+  # Only render these pages. Without this, Quarto would also render every
+  # README.md and PROJECT_STRUCTURE.md in the repo.
+  render:
+    - index.qmd
+    - analysis.qmd
+  # Copied as-is to the site: the logos used by README.md.
+  resources:
+    - docs/img/*
+
+website:
+  title: "Project skeleton"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: analysis.qmd
+        text: Analysis
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+
+# Pages show code but do not run it, so no data is needed to build the site.
+# Switch to eval: true per page (or per chunk) when the data is available.
+execute:
+  eval: false

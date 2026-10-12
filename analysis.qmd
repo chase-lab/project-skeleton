@@ -1,0 +1,32 @@
+---
+title: "Analysis"
+---
+
+This page shows how the results of a script can be rendered. The chunks below
+are not run (`eval: false` is set in `_quarto.yml`), so the site builds without
+any data. Turn evaluation on for a page with `execute: eval: true` in its
+header once the data is available, and only if the output is safe to publish.
+
+## Load the processed data
+
+```{r}
+#| label: load-processed
+processed <- readRDS(file = fs::path("data", "processed", "my_data.rds"))
+```
+
+## Plot
+
+```{r}
+#| label: plot-example
+#| fig-cap: "Replace with your own figure."
+library(ggplot2)
+
+ggplot(data = processed, mapping = aes(x = site, y = value)) +
+  geom_boxplot()
+```
+
+## Reuse a figure made by a script
+
+Figures saved by `scripts/3_analyse.R` land in `outputs/`, which is ignored by
+git. A site built by CI does not have them. Either re-create the figure in a
+chunk as above, or commit the few small images you want to publish.

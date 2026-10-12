@@ -190,3 +190,36 @@ Optional extras live in separate branches of this repository, so `main` stays si
 - `githooks`: tracked git hooks that run on every commit, for example `air format`, `jarl check` and running the tests, activated with one `git config` line.
 
 Each branch has its own README explaining what it adds and how to use it. Browse them on GitHub: [`zenodo`](https://github.com/chase-lab/project-skeleton/tree/zenodo), [`website`](https://github.com/chase-lab/project-skeleton/tree/website), [`githooks`](https://github.com/chase-lab/project-skeleton/tree/githooks).
+
+## Project website
+
+What: your project as a small website (a home page built from `README.md`, plus analysis pages), published for free with GitHub Pages from the same repository. The `website` branch adds it.
+
+Files added:
+
+- `_quarto.yml`: site settings. It renders only `index.qmd` and `analysis.qmd`, so the READMEs are not turned into pages. The site is built into `_site/`, which is ignored by git. We use Quarto's default `_site/` instead of `docs/` because `docs/` already holds the logos.
+- `index.qmd`: home page, includes `README.md`. Edit the README, not this file.
+- `analysis.qmd`: example page. Its code is shown but not run (`eval: false`), so building needs no data.
+- `.github/workflows/publish.yml`: builds and publishes the site on every push to `main`.
+- `.gitignore`: one line added, `/_site/`.
+
+Preview locally (needs Quarto, from <https://quarto.org> or bundled with RStudio):
+
+```
+quarto preview
+```
+
+Publishing:
+
+1. One-time: create the `gh-pages` branch by running `quarto publish gh-pages` once from a terminal in the project (this is what the Quarto documentation recommends before relying on the workflow). Then, on GitHub, go to `Settings -> Pages`, set the source to `Deploy from a branch`, branch `gh-pages`, folder `/ (root)`. Also check that `Settings -> Actions -> General -> Workflow permissions` is set to `Read and write permissions`.
+2. Automatic: every push to `main` runs the workflow and updates the site. You can also start it by hand in the `Actions` tab (`Quarto Publish -> Run workflow`).
+3. Manual alternative, from a terminal in the project: `quarto publish gh-pages`. It renders and pushes the `gh-pages` branch for you.
+
+The site appears at `https://<user>.github.io/<repository-name>/`. If you use renv, the workflow restores `renv.lock` automatically once the file exists.
+
+Pitfalls:
+
+- The site is built on a clean machine without your data, so pages must render without `data/` and `outputs/`. Keep `eval: false`, or commit the small files a page needs.
+- Treat the site as public, whatever the visibility of the repository. Never publish private data, unpublished results or secrets in a page.
+- The repository name is part of the URL. Rename the repository before you share the link.
+- `analysis.qmd` is only an example: replace its placeholder code, or delete the page and its entries in `_quarto.yml`.

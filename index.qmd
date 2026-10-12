@@ -1,0 +1,7 @@
+---
+pagetitle: "Home"
+---
+
+<!-- This page is the README. Edit README.md, not this file. -->
+
+{{< include README.md >}}

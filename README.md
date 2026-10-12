@@ -71,3 +71,9 @@ Details, rules and recipes are in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md): 
 Optional extras live in separate branches: `zenodo`, `website` and `githooks`.
 You will not see them unless you look for them: `PROJECT_STRUCTURE.md`
 describes each one and links to it.
+
+## Project website
+
+The `website` branch turns this project into a website published with GitHub
+Pages. See the "Project website" section of
+[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md); preview it with `quarto preview`.
