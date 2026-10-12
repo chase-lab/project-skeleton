@@ -1,0 +1,12 @@
+# PLACEHOLDER values: replace every <...> before you share or archive the project.
+cff-version: 1.2.0
+message: "If you use this project, please cite it as below."
+title: "<PROJECT TITLE>"
+version: "0.0.0"
+date-released: "<YYYY-MM-DD>"
+authors:
+  - family-names: "<FAMILY NAME>"
+    given-names: "<GIVEN NAME>"
+    orcid: "<ORCID URL>"
+repository-code: "<REPOSITORY URL>"
+license: MIT
