@@ -1,6 +1,4 @@
-
 <p>
-
 <img src="docs/img/iDiv-logo-pa-rgb-en-small-4c.png" alt="iDiv" height="60" />
 <img src="docs/img/renv.png" alt="renv" width="90" />
 <img src="docs/img/testthat.png" alt="testthat" width="90" />
@@ -9,72 +7,66 @@
 
 # Project skeleton
 
-A minimal, reproducible starting point for an R research project: a flat
-folder layout, a curated `.gitignore`, pinned packages with renv, data
-checks with checkmate and testthat, and a place for external data with
-pins. Clone it, delete what you do not need, and start working.
+A minimal, reproducible starting point for an R research project: a simple
+folder layout, a curated `.gitignore`, pinned packages with renv, data checks
+with checkmate and testthat, and a place for external data with pins. Download
+it, delete what you do not need, and start working.
 
 ## Getting started
 
-1.  Clone this repository and rename the folder to your project name.
-2.  Open the folder in R (the empty `.here` file marks the project
-    root).
-3.  Run `renv::init()` once to create your own `renv.lock` (see
-    `PROJECT_STRUCTURE.md`).
-4.  Replace the placeholders in `CITATION.cff` and `LICENSE`.
-5.  Put raw data in `data/raw/` and edit the numbered scripts in
-    `scripts/`.
+1. Download this repository as a zip file, unzip it and rename the folder to
+   your project name. You start with no git history; run `git init` when you
+   are ready (or forced) to use git.
+2. Open `project-skeleton.Rproj` in RStudio (rename it to match your project).
+3. Put raw data in `data/raw/` and edit the numbered scripts in `scripts/`.
+4. Replace the placeholders in `CITATION.cff` and `LICENSE`.
+5. Run `renv::init()` at the end of the project, before you share the code
+   (see `PROJECT_STRUCTURE.md`).
 
 ## Folder structure
 
-    .
-    ├── CITATION.cff
-    ├── LICENSE
-    ├── PROJECT_STRUCTURE.md
-    ├── R
-    │   ├── README.md
-    │   └── check_data.R
-    ├── README.Rmd
+```
+.
+├── CITATION.cff
+├── LICENSE
+├── PROJECT_STRUCTURE.md
+├── project-skeleton.Rproj
+├── R
+│   ├── README.md
+│   └── check_data.R
+├── README.md
+├── data
+│   ├── README.md
+│   ├── processed
+│   │   └── README.md
+│   └── raw
+│       └── README.md
+├── docs
+│   ├── README.md
+│   └── img
+│       ├── README.md
+│       └── (logos)
+├── outputs
+│   └── README.md
+├── scripts
+│   ├── 1_download.R
+│   ├── 2_wrangle.R
+│   ├── 3_analyse.R
+│   └── README.md
+└── tests
     ├── README.md
-    ├── data
+    ├── testthat
     │   ├── README.md
-    │   ├── processed
-    │   │   └── README.md
-    │   └── raw
-    │       └── README.md
-    ├── docs
-    │   ├── README.md
-    │   └── img
-    │       ├── README.md
-    │       ├── iDiv-logo-pa-rgb-en-small-4c.png
-    │       ├── pins.png
-    │       ├── pins.svg
-    │       ├── renv.png
-    │       ├── renv.svg
-    │       ├── testthat.png
-    │       └── testthat.svg
-    ├── outputs
-    │   └── README.md
-    ├── scripts
-    │   ├── 1_download.R
-    │   ├── 2_wrangle.R
-    │   ├── 3_analyse.R
-    │   └── README.md
-    └── tests
-        ├── README.md
-        ├── testthat
-        │   ├── README.md
-        │   ├── helper-functions.R
-        │   ├── test-data-structure.R
-        │   └── test-data-values.R
-        └── testthat.R
+    │   ├── helper-functions.R
+    │   ├── test-data-structure.R
+    │   └── test-data-values.R
+    └── testthat.R
+```
 
-Details, rules and recipes are in
-[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
+Details, rules and recipes are in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
 
 ## Optional add-on branches
 
-Optional extras live in separate branches you can merge when needed:
-`githooks`, `zenodo` and `website` (all coming soon). You will not see
-them unless you look for them: `PROJECT_STRUCTURE.md` explains how to
-fetch, inspect and merge each one.
+Optional extras live in separate branches: `githooks`, `zenodo` and `website`.
+You will not see them unless you look for them: `PROJECT_STRUCTURE.md`
+describes each one and links to it.
