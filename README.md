@@ -22,6 +22,8 @@ it, delete what you do not need, and start working.
 4. Replace the placeholders in `CITATION.cff` and `LICENSE`.
 5. Run `renv::init()` at the end of the project, before you share the code
    (see `PROJECT_STRUCTURE.md`).
+6. Read `PROJECT_STRUCTURE.md`, then **delete it**. Rewrite this `README.md` to
+   describe your own project.
 
 ## Folder structure
 
@@ -58,12 +60,11 @@ it, delete what you do not need, and start working.
     ├── testthat
     │   ├── README.md
     │   ├── helper-functions.R
-    │   ├── test-data-structure.R
-    │   └── test-data-values.R
+    │   └── test-check_data.R
     └── testthat.R
 ```
 
-Details, rules and recipes are in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
+Details, rules and recipes are in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md): documentation of this skeleton, to read and then delete.
 
 ## Optional add-on branches
 

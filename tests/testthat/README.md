@@ -1,6 +1,6 @@
 # tests/testthat/
 
 - `helper-functions.R`: sourced automatically before the tests; loads `R/`.
-- `test-data-structure.R`, `test-data-values.R`: templates, skipped until you point them at your data.
+- `test-check_data.R`: tests of `check_dataset()` in `R/check_data.R`. Add one `test-<name>.R` per file in `R/`.
 
 Tracked: everything.

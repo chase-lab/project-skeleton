@@ -1,5 +1,7 @@
 # Project structure guide
 
+> This guide documents the skeleton, for your information. Read it, then **delete this file**. Describe your own project in `README.md`, not here.
+
 ## Why this structure
 
 Most reproducibility problems are boring: a script that only runs on one laptop, data nobody can find again, a package update that silently changes a result, a figure nobody can regenerate. The fixes are small habits, not a big system. This skeleton bundles those habits so you can adopt them in five minutes instead of designing them yourself:
@@ -27,7 +29,7 @@ Take what helps and delete the rest. Each piece works alone.
 ├── R/                       reusable functions          (tracked)
 ├── scripts/                 numbered pipeline scripts   (tracked)
 ├── outputs/                 figures and tables          (ignored, README tracked)
-├── tests/testthat/          data and function tests     (tracked)
+├── tests/testthat/          tests of your functions     (tracked)
 └── docs/img/                logos and images            (tracked)
 ```
 
@@ -45,6 +47,25 @@ kept in git thanks to that README.
 | `CITATION.cff`, `LICENSE` | OS files: `.DS_Store`, `Thumbs.db` |
 
 When in doubt: track what a colleague needs to rebuild everything else, ignore what the code can regenerate or what must stay private. If a file is both big and irreplaceable, it does not belong in git; see the pins section.
+
+## When your data lives outside the repo: pins
+
+Why: data may be too big for git, not yours to publish, or shared between projects. pins stores data on a "board" and lets code read it by name, with versions, so the repo holds the code and the board holds the data.
+
+```r
+board <- pins::board_folder(path = "/shared/project_data", versioned = TRUE)
+pins::pin_write(board = board, x = processed, name = "processed_data")
+processed <- pins::pin_read(board = board, name = "processed_data")
+```
+
+A local board in your user data directory, for data only you need:
+
+```r
+board <- pins::board_local(versioned = TRUE)
+pins::pin_write(board = board, x = processed, name = "processed_data")
+```
+
+With `versioned = TRUE` every write keeps the older version; list them with `pins::pin_versions()`. Documentation: <https://pins.rstudio.com>.
 
 ## Reproducible packages with renv
 
@@ -69,14 +90,28 @@ Commit `renv.lock` and `renv/activate.R`; renv ignores its own internals. The sk
 Quick-and-dirty path: run `renv::init()` just before sharing the code when
 publishing the article. That alone covers most of the benefit.
 
+Reviving an old project that has no `renv.lock`: if you remember roughly when it last worked, ask for the packages as they were on that day. renv takes them from a dated snapshot of CRAN kept by Posit Package Manager:
+
+```r
+renv::init(bare = TRUE)                      # an empty project library
+renv::checkout(
+  date = "2023-02-08",                       # the day it last worked
+  actions = c("snapshot", "restore")         # install them and write renv.lock
+)
+```
+
+By default `checkout()` covers every package your scripts use. Mind the R version too: the packages of 2023 were built for the R of 2023. Details: <https://rstudio.github.io/renv/reference/checkout.html>.
+
 ## Testing your data with checkmate and testthat
 
 Why: your analysis rests on expectations about the data (this column exists, ids are unique, temperatures are plausible). Written down, they catch problems at input, during manipulation and at output; unwritten, they fail silently.
 
-- checkmate: fast asserts inside your functions and scripts. They stop the run immediately with a clear message.
-- testthat: expectations run on demand (or in CI), reported as a test suite.
+Two tools, two places:
 
-A worked example. `R/check_data.R` defines `check_dataset()`, which asserts a data frame, required columns, and a non-missing, unique id column:
+- **checkmate** checks your **data**, inside the scripts in `scripts/`, every time they run. It stops the run immediately with a clear message. Check at the door (input), after every join or reshaping step, and on the way out (output).
+- **testthat** tests your **functions** in `R/`, in `tests/testthat/`, when you ask for it. It tells you that the helpers you wrote still do what you think they do.
+
+`scripts/2_wrangle.R` shows the pattern. `R/check_data.R` defines `check_dataset()`, which asserts a data frame, required columns, and a non-missing, unique id column:
 
 ```r
 source(file = fs::path("R", "check_data.R"))
@@ -86,45 +121,44 @@ raw |>
   check_dataset(required_columns = "site", id_column = "id")
 ```
 
-The same expectation as a test lives in `tests/testthat/test-data-structure.R`. Run all tests with:
+Joins deserve the most care, because a wrong join corrupts a result without any error. Be explicit and intentional about what a join may do, with `relationship` and `unmatched`:
+
+```r
+library(dplyr)
+
+processed <- inner_join(
+  x = raw,
+  y = sites,
+  by = join_by(site_id),
+  relationship = "many-to-one",          # a duplicated site would multiply rows: stop
+  unmatched = c(x = "error", y = "drop") # a row without a site: stop. Unused sites: drop on purpose
+)
+```
+
+Writing these arguments makes you think about the join, and it saves you from writing a separate test for it.
+
+The tests of `check_dataset()` itself live in `tests/testthat/test-check_data.R`. This project is not a package, so `devtools::test()` does not apply. Run all tests with:
 
 ```r
 testthat::test_dir("tests/testthat")
 ```
 
-The templates that point at your data are skipped (`testthat::skip("TEMPLATE: ...")`) so a fresh clone passes. Remove the `skip()` lines once they point at your files. As an extension, the testdat package provides ready-made column-level expectations for data frames.
+As an extension, the testdat package provides ready-made column-level expectations for data frames.
 
-## When your data lives outside the repo: pins
+## Formatting with air
 
-Why: data may be too big for git, not yours to publish, or shared between projects. pins stores data on a "board" and lets code read it by name, with versions, so the repo holds the code and the board holds the data.
-
-```r
-board <- pins::board_folder(path = "/shared/project_data", versioned = TRUE)
-pins::pin_write(board = board, x = processed, name = "processed_data")
-processed <- pins::pin_read(board = board, name = "processed_data")
-```
-
-A local board in your user data directory, for data only you need:
+What: air is a fast code formatter for R. It rewrites your code in one consistent style, so diffs show real changes and nobody argues about spaces. Both air and the linter jarl are standalone programs, not R packages, so renv does not track them. Install air following <https://posit-dev.github.io/air/>.
 
 ```r
-board <- pins::board_local(versioned = TRUE)
-pins::pin_write(board = board, x = processed, name = "processed_data")
+# Before
+1+2:3*(4/5)
+# After
+1 + 2:3 * (4 / 5)
 ```
 
-With `versioned = TRUE` every write keeps the older version; list them with `pins::pin_versions()`. Documentation: <https://pins.rstudio.com>.
+In RStudio, tell it to use air as the external formatter: `Tools -> Global Options -> Code -> Formatting`, set `Code formatter:` to `External` and `Reformat command:` to `{path/to/air} format` (`which air` in a terminal gives the path). To format on every save, tick `Reformat documents on save` under `Tools -> Global Options -> Code -> Saving`.
 
-## Formatting and linting with air and jarl
-
-What: air formats R code and jarl lints R code. Both are fast standalone binaries, not R packages, so they need no R session and are not tracked by renv. Install each following its own documentation.
-
-Why: consistent formatting gives clean diffs, fewer style debates in review, and a linter catches mistakes (unused objects, risky constructs) early. Both are optional.
-
-```bash
-air format .     # rewrite R files in place with a consistent style
-jarl check .     # report lints for R files in the current folder
-```
-
-Run `air format --help` and `jarl check --help` for the other options (for example `air format --check` only reports files that would change). Running both automatically on every commit is provided by the `githooks` branch; see the next section.
+Running air and jarl (a linter that catches likely mistakes) automatically on every commit is provided by the `githooks` branch; see the next section.
 
 ## Optional add-on branches
 
