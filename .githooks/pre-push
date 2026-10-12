@@ -1,0 +1,13 @@
+#!/bin/sh
+# Runs before every push. Blocks the push if the tests fail.
+# Skip once with: git push --no-verify
+
+if [ ! -f tests/testthat.R ]; then
+  echo "pre-push: no tests/testthat.R, skipping tests."
+  exit 0
+fi
+if ! command -v Rscript >/dev/null 2>&1; then
+  echo "pre-push: WARNING Rscript not found, skipping tests." >&2
+  exit 0
+fi
+Rscript tests/testthat.R || { echo "pre-push: tests failed, push blocked. To push anyway: git push --no-verify" >&2; exit 1; }

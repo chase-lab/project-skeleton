@@ -71,3 +71,16 @@ Details, rules and recipes are in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md): 
 Optional extras live in separate branches: `zenodo`, `website` and `githooks`.
 You will not see them unless you look for them: `PROJECT_STRUCTURE.md`
 describes each one and links to it.
+
+## Git hooks
+
+This branch adds tracked git hooks in `.githooks/`. Before each commit they run
+`air format --check`, `jarl check` and the tests; before each push, the tests.
+Activate them once per clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+Missing air or jarl is only a warning. Skip the checks once with
+`git commit --no-verify`. Details: [.githooks/README.md](.githooks/README.md).

@@ -187,6 +187,27 @@ Optional extras live in separate branches of this repository, so `main` stays si
 
 - `zenodo`: steps to archive a GitHub release on Zenodo and get a DOI, building on `CITATION.cff`.
 - `website`: a Quarto website published with GitHub Pages from the same repository.
-- `githooks`: tracked git hooks that run on every commit, for example `air format`, `jarl check` and running the tests, activated with one `git config` line.
+- `githooks`: tracked git hooks that run on every commit, for example `air format`, `jarl check` and running the tests, activated with one `git config` line (see "Git hooks" above).
 
 Each branch has its own README explaining what it adds and how to use it. Browse them on GitHub: [`zenodo`](https://github.com/chase-lab/project-skeleton/tree/zenodo), [`website`](https://github.com/chase-lab/project-skeleton/tree/website), [`githooks`](https://github.com/chase-lab/project-skeleton/tree/githooks).
+
+## Git hooks
+
+What: a git hook is a script that git runs automatically at a given moment, for example just before a commit is created. Used well, hooks stop badly formatted code, likely mistakes and failing tests before they enter the history.
+
+Why they are normally untracked: hooks live in `.git/hooks`, and git never tracks the `.git` folder. So you cannot share hooks through the repository, and every colleague would have to copy them by hand.
+
+How the `githooks` branch works: the hooks are ordinary files in a tracked folder, `.githooks/`. One line tells git to use that folder instead of `.git/hooks`. Each person runs it once per clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+- `pre-commit` runs `air format --check` and `jarl check` on the staged R files, then the tests (`Rscript tests/testthat.R`).
+- `pre-push` runs the tests only.
+- air is a formatter: it rewrites code in one consistent style. The hook only checks; if it fails, run `air format .` and commit again.
+- jarl is a linter: it points at likely mistakes, such as `T` instead of `TRUE`, without changing your code.
+- If air or jarl is not installed, the hook warns, gives the install link and skips that check. It never blocks you for a missing tool.
+- To skip the hooks once: `git commit --no-verify` (or `git push --no-verify`).
+
+Both tools are installed as described in the section above and in the `.githooks/README.md` of the branch.

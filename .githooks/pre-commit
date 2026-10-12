@@ -1,0 +1,45 @@
+#!/bin/sh
+# Runs before every commit. Blocks the commit if a check fails.
+# Skip once with: git commit --no-verify
+# air and jarl are optional: if missing, we warn and skip that check.
+
+fail=0
+
+# Staged R files (added, copied or modified), one per line.
+r_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(R|r|Rmd|qmd)$')
+
+if [ -n "$r_files" ]; then
+  # 1. Formatting
+  if command -v air >/dev/null 2>&1; then
+    if ! printf '%s\n' "$r_files" | tr '\n' '\0' | xargs -0 air format --check; then
+      echo "pre-commit: some files are not formatted. Run 'air format .' then 'git add' them again." >&2
+      fail=1
+    fi
+  else
+    echo "pre-commit: WARNING air not found, skipping format check. Install: https://posit-dev.github.io/air/" >&2
+  fi
+
+  # 2. Linting
+  if command -v jarl >/dev/null 2>&1; then
+    if ! printf '%s\n' "$r_files" | tr '\n' '\0' | xargs -0 jarl check; then
+      echo "pre-commit: jarl found problems. Fix them and commit again." >&2
+      fail=1
+    fi
+  else
+    echo "pre-commit: WARNING jarl not found, skipping lint check. Install: https://jarl.etiennebacher.com/" >&2
+  fi
+fi
+
+# 3. Tests
+if [ -f tests/testthat.R ]; then
+  if command -v Rscript >/dev/null 2>&1; then
+    Rscript tests/testthat.R || { echo "pre-commit: tests failed." >&2; fail=1; }
+  else
+    echo "pre-commit: WARNING Rscript not found, skipping tests." >&2
+  fi
+else
+  echo "pre-commit: no tests/testthat.R, skipping tests."
+fi
+
+[ "$fail" -ne 0 ] && echo "pre-commit: commit blocked. To commit anyway: git commit --no-verify" >&2
+exit "$fail"
