@@ -18,15 +18,16 @@ source(file = fs::path("R", "check_data.R"))
 # # 2. After a join: say what the join may and may not do.
 # #    relationship = "many-to-one": a duplicated site_id in `sites` would
 # #    multiply rows, so it stops the script instead.
-# #    unmatched: a row of `raw` without a site stops the script; sites that no
-# #    row uses are dropped on purpose.
-# processed <- inner_join(
+# #    unmatched = "drop": sites that no row uses are dropped on purpose.
+# processed <- left_join(
 #   x = raw,
 #   y = sites,
 #   by = join_by(site_id),
 #   relationship = "many-to-one",
-#   unmatched = c(x = "error", y = "drop")
+#   unmatched = "drop"
 # )
+# #    A row of `raw` without a site gets NA: stop (`region` comes from `sites`).
+# checkmate::assert_character(x = processed[["region"]], any.missing = FALSE)
 #
 # # 3. On the way out: nothing lost or gained, values plausible.
 # checkmate::assert_data_frame(x = processed, nrows = nrow(raw))

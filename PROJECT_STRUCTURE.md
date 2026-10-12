@@ -126,13 +126,16 @@ Joins deserve the most care, because a wrong join corrupts a result without any 
 ```r
 library(dplyr)
 
-processed <- inner_join(
+processed <- left_join(
   x = raw,
   y = sites,
   by = join_by(site_id),
-  relationship = "many-to-one",          # a duplicated site would multiply rows: stop
-  unmatched = c(x = "error", y = "drop") # a row without a site: stop. Unused sites: drop on purpose
+  relationship = "many-to-one", # a duplicated site would multiply rows: stop
+  unmatched = "drop"            # sites that no row uses: drop on purpose
 )
+
+# a row without a site gets NA: stop
+checkmate::assert_character(x = processed[["region"]], any.missing = FALSE)
 ```
 
 Writing these arguments makes you think about the join, and it saves you from writing a separate test for it.
