@@ -140,6 +140,24 @@ testthat::expect_false(object = anyNA(processed[["region"]]))
 
 Writing these arguments makes you think about the join, and it saves you from writing a separate test for it.
 
+Reshaping works the same way. Left to its defaults, `tidyr::pivot_wider()` turns duplicated rows into list-columns (with only a warning) and leaves gaps as `NA`. Say what you want instead, and check the result:
+
+```r
+wide <- tidyr::pivot_wider(
+  data = counts,
+  id_cols = site_id,           # which columns identify a row: not "all the others"
+  names_from = species,
+  names_prefix = "abund_",
+  values_from = abundance,
+  values_fn = sum,             # duplicated site and species: add them up, on purpose
+  values_fill = 0              # a species not seen at a site: 0, on purpose
+)
+
+testthat::expect_equal(object = nrow(wide), expected = dplyr::n_distinct(counts[["site_id"]]))
+```
+
+`pivot_longer()` is the same: say `cols`, `names_to` and `values_drop_na` yourself.
+
 The tests of `check_dataset()` itself live in `tests/testthat/test-check_data.R`. This project is not a package, so `devtools::test()` does not apply. Run all tests with:
 
 ```r
