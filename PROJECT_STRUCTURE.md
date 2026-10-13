@@ -2,7 +2,7 @@
 
 > This guide documents the skeleton, for your information. Read it, then **delete this file**. Describe your own project in `README.md`, not here.
 
-## Why this structure
+## A standard structure
 
 Most reproducibility problems are boring: a script that only runs on one laptop, data nobody can find again, a package update that silently changes a result, a figure nobody can regenerate. The fixes are small habits, not a big system. This skeleton bundles those habits so you can adopt them in five minutes instead of designing them yourself:
 
@@ -102,7 +102,7 @@ renv::checkout(
 
 By default `checkout()` covers every package your scripts use. Mind the R version too: the packages of 2023 were built for the R of 2023. Details: <https://rstudio.github.io/renv/reference/checkout.html>.
 
-## Testing your data with checkmate and testthat
+## Testing your data with testthat and checkmate
 
 Why: your analysis rests on expectations about the data (this column exists, ids are unique, temperatures are plausible). Written down, they catch problems at input, during manipulation and at output; unwritten, they fail silently.
 
@@ -163,12 +163,12 @@ In RStudio, tell it to use air as the external formatter: `Tools -> Global Optio
 
 Running air and jarl (a linter that catches likely mistakes) automatically on every commit is provided by the `githooks` branch; see the next section.
 
-## Optional add-on branches
+## Optional add-ons
 
 Optional extras live in separate branches of this repository, so `main` stays simple.
 
-- `githooks`: tracked git hooks that run on every commit, for example `air format`, `jarl check` and running the tests, activated with one `git config` line.
 - `zenodo`: steps to archive a GitHub release on Zenodo and get a DOI, building on `CITATION.cff`.
 - `website`: a Quarto website published with GitHub Pages from the same repository.
+- `githooks`: tracked git hooks that run on every commit, for example `air format`, `jarl check` and running the tests, activated with one `git config` line.
 
 Each branch has its own README explaining what it adds and how to use it. Links to the branches will be added here once they are published.

@@ -66,8 +66,8 @@ it, delete what you do not need, and start working.
 
 Details, rules and recipes are in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md): documentation of this skeleton, to read and then delete.
 
-## Optional add-on branches
+## Optional add-ons
 
-Optional extras live in separate branches: `githooks`, `zenodo` and `website`.
+Optional extras live in separate branches: `zenodo`, `website` and `githooks`.
 You will not see them unless you look for them: `PROJECT_STRUCTURE.md`
 describes each one and links to it.
