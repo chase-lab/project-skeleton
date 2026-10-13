@@ -171,4 +171,4 @@ Optional extras live in separate branches of this repository, so `main` stays si
 - `website`: a Quarto website published with GitHub Pages from the same repository.
 - `githooks`: tracked git hooks that run on every commit, for example `air format`, `jarl check` and running the tests, activated with one `git config` line.
 
-Each branch has its own README explaining what it adds and how to use it. Links to the branches will be added here once they are published.
+Each branch has its own README explaining what it adds and how to use it. Browse them on GitHub: [`zenodo`](https://github.com/chase-lab/project-skeleton/tree/zenodo), [`website`](https://github.com/chase-lab/project-skeleton/tree/website), [`githooks`](https://github.com/chase-lab/project-skeleton/tree/githooks).
