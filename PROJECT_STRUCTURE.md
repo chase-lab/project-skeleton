@@ -9,7 +9,7 @@ Most reproducibility problems are boring: a script that only runs on one laptop,
 - one simple layout, so everyone knows where things are;
 - a curated `.gitignore`, so git tracks code and not data or clutter;
 - renv, so your package versions are written down;
-- checkmate and testthat, so your expectations about the data are written down too;
+- testthat, so your expectations about the data are written down too;
 - pins, for data that cannot or should not live in the repo.
 
 Take what helps and delete the rest. Each piece works alone.
@@ -102,16 +102,16 @@ renv::checkout(
 
 By default `checkout()` covers every package your scripts use. Mind the R version too: the packages of 2023 were built for the R of 2023. Details: <https://rstudio.github.io/renv/reference/checkout.html>.
 
-## Testing your data with testthat and checkmate
+## Testing your data with testthat
 
 Why: your analysis rests on expectations about the data (this column exists, ids are unique, temperatures are plausible). Written down, they catch problems at input, during manipulation and at output; unwritten, they fail silently.
 
-Two tools, two places:
+One tool, two places:
 
-- **checkmate** checks your **data**, inside the scripts in `scripts/`, every time they run. It stops the run immediately with a clear message. Check at the door (input), after every join or reshaping step, and on the way out (output).
-- **testthat** tests your **functions** in `R/`, in `tests/testthat/`, when you ask for it. It tells you that the helpers you wrote still do what you think they do.
+- In your scripts (`scripts/`), testthat's `expect_*()` functions check your **data** every time the script runs. Outside a test file, a failed expectation simply stops the run with a clear message. Check at the door (input), after every join or reshaping step, and on the way out (output).
+- In `tests/testthat/`, testthat tests your **functions** in `R/`, when you ask for it. It tells you that the helpers you wrote still do what you think they do.
 
-`scripts/2_wrangle.R` shows the pattern. `R/check_data.R` defines `check_dataset()`, which asserts a data frame, required columns, and a non-missing, unique id column:
+`scripts/2_wrangle.R` shows the pattern. `R/check_data.R` defines `check_dataset()`, which expects a data frame, the required columns, and a non-missing, unique id column:
 
 ```r
 source(file = fs::path("R", "check_data.R"))
@@ -135,7 +135,7 @@ processed <- left_join(
 )
 
 # a row without a site gets NA: stop
-checkmate::assert_character(x = processed[["region"]], any.missing = FALSE)
+testthat::expect_false(object = anyNA(processed[["region"]]))
 ```
 
 Writing these arguments makes you think about the join, and it saves you from writing a separate test for it.

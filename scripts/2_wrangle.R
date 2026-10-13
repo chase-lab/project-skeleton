@@ -1,7 +1,8 @@
 # TEMPLATE step 2: clean data/raw/ into data/processed/.
 #
 # Your DATA is checked here, in the script, at three points: at the door
-# (input), after every join or reshaping step, and on the way out (output).
+# (input), after every join or reshaping step, and on the way out (output),
+# with testthat's expect_*() functions.
 # tests/ only tests the FUNCTIONS in R/, not your data.
 
 library(dplyr)
@@ -27,15 +28,12 @@ source(file = fs::path("R", "check_data.R"))
 #   unmatched = "drop"
 # )
 # #    A row of `raw` without a site gets NA: stop (`region` comes from `sites`).
-# checkmate::assert_character(x = processed[["region"]], any.missing = FALSE)
+# testthat::expect_false(object = anyNA(processed[["region"]]))
 #
 # # 3. On the way out: nothing lost or gained, values plausible.
-# checkmate::assert_data_frame(x = processed, nrows = nrow(raw))
-# checkmate::assert_numeric(
-#   x = processed[["temperature"]],
-#   lower = -90,
-#   upper = 60,
-#   any.missing = FALSE
-# )
+# testthat::expect_equal(object = nrow(processed), expected = nrow(raw))
+# testthat::expect_false(object = anyNA(processed[["temperature"]]))
+# testthat::expect_gte(object = min(processed[["temperature"]]), expected = -90)
+# testthat::expect_lte(object = max(processed[["temperature"]]), expected = 60)
 #
 # saveRDS(object = processed, file = fs::path("data", "processed", "my_data.rds"))

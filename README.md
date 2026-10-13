@@ -9,7 +9,7 @@
 
 A minimal, reproducible starting point for an R research project: a simple
 folder layout, a curated `.gitignore`, pinned packages with renv, data checks
-with checkmate and testthat, and a place for external data with pins. Download
+with testthat, and a place for external data with pins. Download
 it, delete what you do not need, and start working.
 
 ## Getting started

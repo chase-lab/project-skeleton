@@ -1,7 +1,7 @@
 # tests/
 
 Automated tests of the **functions** in `R/`, run with testthat. Your data is
-not tested here: it is checked inside the scripts in `scripts/`, with checkmate.
+not tested here: it is checked inside the scripts in `scripts/`, with testthat's `expect_*()` functions.
 
 - `testthat.R`: entry point that runs all tests.
 - `testthat/`: test files (`test-*.R`) and helpers (`helper-*.R`).

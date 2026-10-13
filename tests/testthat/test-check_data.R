@@ -1,6 +1,7 @@
 # Tests of the FUNCTIONS in R/, here check_dataset() from R/check_data.R.
 # Your data is not tested here: it is checked inside the scripts, with
-# checkmate, every time they run. Add one test file per file in R/.
+# testthat's expect_*() functions, every time they run. Add one test file per
+# file in R/.
 
 testthat::test_that("check_dataset accepts a well-formed table", {
   good <- data.frame(id = 1:3, site = c("a", "b", "c"))

@@ -1,8 +1,9 @@
-# Generic data checks built on checkmate. This is a TEMPLATE, not a package:
-# copy, rename and extend it for your own data.
+# Generic data checks built on testthat expectations. This is a TEMPLATE, not a
+# package: copy, rename and extend it for your own data.
 #
-# Why: checkmate asserts fail fast with a clear message, so a wrong input stops
-# the pipeline at the step that caused it, not three scripts later.
+# Why: outside a test file, a failed testthat expectation simply stops the
+# script with a clear message, so a wrong input stops the pipeline at the step
+# that caused it, not three scripts later.
 
 #' Check the basic structure of a dataset
 #'
@@ -15,20 +16,27 @@
 #'   Stops with an informative error if a check fails.
 check_dataset <- function(x, required_columns, id_column) {
   # 1. Is it a table at all?
-  checkmate::assert_data_frame(x = x, min.rows = 1L)
+  testthat::expect_s3_class(object = x, class = "data.frame")
+  testthat::expect_gt(object = nrow(x), expected = 0)
 
   # 2. Are the columns we rely on there?
-  checkmate::assert_character(x = required_columns, any.missing = FALSE)
-  checkmate::assert_subset(x = required_columns, choices = colnames(x))
+  testthat::expect_true(
+    object = all(is.element(required_columns, colnames(x))),
+    info = "a required column is missing"
+  )
+  testthat::expect_true(
+    object = is.element(id_column, colnames(x)),
+    info = "the id column is missing"
+  )
 
   # 3. Does the id column identify rows? (no NA, no duplicates)
-  checkmate::assert_string(x = id_column)
-  checkmate::assert_subset(x = id_column, choices = colnames(x))
-  checkmate::assert_vector(
-    x = x[[id_column]],
-    any.missing = FALSE,
-    unique = TRUE,
-    .var.name = id_column
+  testthat::expect_false(
+    object = anyNA(x[[id_column]]),
+    info = "the id column has missing values"
+  )
+  testthat::expect_false(
+    object = anyDuplicated(x[[id_column]]) > 0,
+    info = "the id column has duplicates"
   )
 
   invisible(x)
